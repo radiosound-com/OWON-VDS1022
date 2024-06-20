@@ -447,7 +447,7 @@ class Frame:
     def _points(self):
         buf = self.buffer
         if isinstance(buf, array) and buf.itemsize == 1:
-            buf = np.frombuffer(buf, np.int8)
+            buf = np.frombuffer(buf, np.int16)
             buf.clip(ADC_MIN, ADC_MAX, out=buf)
             self.buffer = buf
         return buf
