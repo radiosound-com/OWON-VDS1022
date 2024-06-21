@@ -447,7 +447,7 @@ class Frame:
     def _points(self):
         buf = self.buffer
         if isinstance(buf, array) and buf.itemsize == 1:
-            buf = np.frombuffer(buf, np.int16)
+            buf = np.frombuffer(buf, np.int8)
             buf.clip(ADC_MIN, ADC_MAX, out=buf)
             self.buffer = buf
         return buf
@@ -646,7 +646,10 @@ class Frame:
 
 
     def _get_levels(self):
-        points = self._points + 128
+        points = []
+        for p in self._points:
+            points.append(int(p)+128)
+        points = np.frombuffer(np.array(points), np.int16)
         counts = np.bincount(points, minlength=256)
         m = np.dot(counts, range(256)) // len(points)
         lo = np.argmax(counts[:m + 1]) - 128
